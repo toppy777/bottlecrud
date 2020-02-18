@@ -2,10 +2,3 @@ image: python:3.7
 
 tasks:
   - command: "pip install bottle"
-  - command: "python"
-  - command: "import sqlite3"
-  - command: "conn = sqlite3.connect('blog.db')"
-  - command: "c = conn.cursor()"
-  - command: "c.execute('create table blogs(id integer primary key autoincrement not null, title text not null, content text not null, created_at date not null, updated_at date)')"
-  - command: "conn.commit()"
-  - command: "c.close()"
