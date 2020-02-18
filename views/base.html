@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<head>
+    <title>CRUD System -{{ title }}-</title>
+</head>
+<body>
+    <h1>
+        {% block title %}
+        {% endblock %}
+    </h1>
+
+    <div>
+        {% block content %}
+        {% endblock %}
+        <a href="/create">記事作成</a>
+        <a href="/showlist">記事閲覧</a>
+    </div>
+</body>

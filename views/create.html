@@ -1,0 +1,14 @@
+{% extends 'base.html'%}
+
+{% block title %}
+    記事作成
+{% endblock %}
+
+{% block content %}
+    <form action="/create" method="post">
+        <input name="title" type="text" placeholder="タイトル"/><br>
+        <!-- 本文: <input name="" type="text" /> -->
+        <textarea name="content" rows="40" cols="100" wrap="hard" placeholder="本文"></textarea>
+        <input value="保存" type="submit" />
+    </form>
+{% endblock %}

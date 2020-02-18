@@ -1,0 +1,29 @@
+{% extends 'base.html'%}
+
+{% block title %}
+    記事閲覧
+{% endblock %}
+
+{% block content %}
+    <table border='1'>
+        <tr>
+            <th>ID</th>
+            <th>タイトル</th>
+            <th>本文</th>
+            <th>作成日時</th>
+        </tr>
+            <tr>
+                <td>{{ blog[0] }}</td>
+                <td>{{ blog[1] }}</td>
+                <td>{{ blog[2].replace('\n', '<br>') }}</td>
+                <td>{{ blog[3] }}</td>
+            </tr>
+    </table>
+    <form action="/deleteblog{{ blog[0] }}" method="post">
+        <button type="submit">削除</button>
+    </form>
+    <form action="/updateblog{{ blog[0] }}" method="get">
+        <button type="submit">編集</button>
+    </form>
+        
+{% endblock %}

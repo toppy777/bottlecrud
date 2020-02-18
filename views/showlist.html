@@ -1,0 +1,20 @@
+{% extends 'base.html'%}
+
+{% block title %}
+    記事一覧
+{% endblock %}
+
+{% block content %}
+    <table border='1'>
+        <tr>
+            <th>ID</th>
+            <th>タイトル</th>
+        </tr>
+        {% for blog in blogs %}
+            <tr>
+                <td>{{ blog[0] }}</td>
+                <td><a href="showblog{{ blog[0] }}">{{ blog[1] }}</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
