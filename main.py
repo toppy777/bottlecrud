@@ -1,10 +1,15 @@
-from bottle import Bottle, run, route, get, post, request
+from bottle import Bottle, run, route, get, post, request, static_file
 from bottle import TEMPLATE_PATH, jinja2_template as template
 import sqlite3
 import datetime
 from const import DB_NAME
 
 app = Bottle()
+
+# Static file
+@app.get("/static/<filename:path>")
+def css(filename):
+    return static_file(filename, root="./static/")
 
 # トップページ
 @app.get('/')
@@ -23,7 +28,7 @@ def do_create():
     content = request.POST.getunicode('content')
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
-    c.execute("INSERT INTO blogs (title, content, date) \
+    c.execute("INSERT INTO blogs (title, content, created_at) \
         VALUES('"+ title +"','"+ content +"','"+ str(datetime.datetime.now()) +"')")
     conn.commit()
     c.close()
