@@ -7,6 +7,4 @@ tasks:
   - command: "c.execute('create table blogs(id integer primary key autoincrement not null, title text not null, content text not null, created_at date not null, updated_at date)')"
   - command: "conn.commit()"
   - command: "c.close()"
-  - command: "^Z"
-
 image: python:3.7
