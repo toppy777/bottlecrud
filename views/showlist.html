@@ -9,11 +9,13 @@
         <tr>
             <th>ID</th>
             <th>タイトル</th>
+            <th>カテゴリ</th>
         </tr>
         {% for blog in blogs %}
             <tr>
                 <td>{{ blog[0] }}</td>
                 <td><a href="showblog{{ blog[0] }}">{{ blog[1] }}</a></td>
+                <td>{{ blog[7] }}</td>
             </tr>
         {% endfor %}
     </table>

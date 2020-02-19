@@ -19,92 +19,98 @@ def top():
 # 記事作成ページ
 @app.get('/create')
 def create():
-    return template('views/create.html')
+    c= ConnectDB()
+    c[1].execute("SELECT * FROM categories")
+    categories = c[1].fetchall()
+    c[1].close()
+    return template('views/create.html', categories=categories)
 
 # 記事のタイトル・本文が、POST送信されるとDBに挿入する
 @app.post('/create')
 def do_create():
     title = request.POST.getunicode('title')
     content = request.POST.getunicode('content')
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute("INSERT INTO blogs (title, content, created_at) \
-        VALUES('"+ title +"','"+ content +"','"+ str(datetime.datetime.now()) +"')")
-    conn.commit()
-    c.close()
+    category_id = request.POST.getunicode('category')
+    c = ConnectDB()
+    c[1] = conn.cursor()
+    c[1].execute("INSERT INTO blogs (title, content, created_at, category_id) \
+        VALUES( ?, ?, ?, ?)", (title, content, str(datetime.datetime.now()), category_id))
+    c[0].commit()
+    c[1].close()
     return template('views/top.html')
 
 # 記事一覧の閲覧
 @app.get('/showlist')
 def show_list():
     c = ConnectDB()
-    c.execute("SELECT * FROM blogs")
-    blogs = c.fetchall()
-    c.close()
+    c[1].execute("SELECT * FROM blogs INNER JOIN categories ON blogs.category_id = categories.category_id")
+    blogs = c[1].fetchall()
+    c[1].close()
     if not blogs:
         return '記事はまだありません。'
     else:
-        return template('showlist.html', blogs = blogs)
+        return template('views/showlist.html', blogs = blogs)
 
 # 指定された記事の閲覧
 @app.get('/showblog<id:re:[0-9]+>')
 def show(id):
     c = ConnectDB()
-    c.execute("SELECT * FROM blogs WHERE id = ?",(id, ))
-    blog = c.fetchone()
-    c.close()
+    c[1].execute("SELECT * FROM blogs WHERE id = ?",(id, ))
+    blog = c[1].fetchone()
+    c[1].close()
     if not blog:
         return 'このアイテムはみつかりませんでした。'
     else:
-        return template('show.html', blog = blog)
+        return template('views/show.html', blog = blog)
 
 @app.post('/deleteblog<id:re:[0-9]+>')
 def delete(id):
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute("DELETE FROM blogs where id = ?", (id, ))
-    conn.commit()
-    c.execute("SELECT * FROM blogs")
-    blogs = c.fetchall()
-    c.close()
-    return template('showlist.html', blogs = blogs)
+    c = ConnectDB()
+    c[1].execute("DELETE FROM blogs where id = ?", (id, ))
+    c[0].commit()
+    c[1].execute("SELECT * FROM blogs")
+    blogs = c[1].fetchall()
+    c[1].close()
+    return template('views/showlist.html', blogs = blogs)
 
 # 編集画面に遷移
 @app.get('/updateblog<id:re:[0-9]+>')
 def update(id):
     c = ConnectDB()
-    c.execute('SELECT * FROM blogs where id = ?', (id, ))
-    blog = c.fetchone()
-    c.close()
-    return template('update.html', blog = blog)
+    c[1].execute('SELECT * FROM blogs where id = ?', (id, ))
+    blog = c[1].fetchone()
+    c[1].close()
+    return template('views/update.html', blog = blog)
 
 # 編集を実行
 @app.post('/updateblog<id:re:[0-9]+>')
 def do_update(id):
     title = request.POST.getunicode('title')
     content = request.POST.getunicode('content')
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute("UPDATE blogs SET title = ?, content = ? where id = ?", (title, content, id))
-    conn.commit()
-    c.execute('SELECT * FROM blogs where id = ?', (id, ))
-    blog = c.fetchone()
-    c.close()
-    return template('show.html', blog = blog)
+    c = ConnectDB()
+    c[1].execute("UPDATE blogs SET title = ?, content = ? where id = ?", (title, content, id))
+    c[0].commit()
+    c[1].execute('SELECT * FROM blogs where id = ?', (id, ))
+    blog = c[1].fetchone()
+    c[1].close()
+    return template('views/show.html', blog = blog)
+
+@app.get('/create_category')
+def create_category():
+    return template('views/create_category.html')
+@app.post('/create_category')
+def create_category():
+    category_name = request.POST.getunicode('category')
+    c = ConnectDB()
+    c[1].execute("INSERT INTO categories (category_name) values (?)", (category_name, ))
+    c[0].commit()
+    c[1].close()
+    return template('views/top.html')
 
 def ConnectDB():
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
-    return c
-
-# flag = False
-# start = 0
-# while flag :
-#     if "str".find('\n', start) != -1:
-#         flag = True
-#         start = "str".find('\n', start)
-#     else:
-#         flag = False
+    return conn, c
 
 run(app=app, host='localhost', port=8080, reloader=True, debug=True)
 # c.execute('CREATE TABLE BLOGS(id integer primary key autoincrement, title text, content text, date date)')
@@ -113,3 +119,4 @@ run(app=app, host='localhost', port=8080, reloader=True, debug=True)
 # http://note.kurodigi.com/python-bottle-01/
 # https://www.takasay.com/entry/2015/07/04/010000
 # https://qiita.com/Gen6/items/f1636be0fe479f42b3ee
+

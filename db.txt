@@ -1,0 +1,14 @@
+blog
+
+blogs :
+id integer primary key autoincrement not null
+title text not null
+content text not null
+created_at date not null
+updated_at date 
+category_id integer
+
+categories :
+category_id integer primary key autoincrement not null
+category_name text not null
+
