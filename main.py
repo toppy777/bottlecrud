@@ -6,10 +6,15 @@ from const import DB_NAME
 
 app = Bottle()
 
-# Static file
+# CSSとか
 @app.get("/static/<filename:path>")
 def css(filename):
     return static_file(filename, root="./static/")
+
+# 画像
+@app.get('/static/img/<filename:path>')
+def img(filename):
+    return static_file(filename, root="./static/img/")
 
 # トップページ
 @app.get('/')
@@ -73,20 +78,36 @@ def do_update(id):
     blog = ExecuteGetContent('SELECT * FROM blogs WHERE id = %s' % id)
     return template('views/show.html', blog = blog)
 
+# カテゴリ作成ページに遷移
 @app.get('/create_category')
 def create_category():
     return template('views/create_category.html')
+# カテゴリを作成
 @app.post('/create_category')
 def create_category():
     category_name = request.POST.getunicode('category')
     ExecuteQuery('INSERT INTO categories (category_name) values ("%s")' % category_name)
     return template('views/top.html')
 
-def ConnectDB():
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    return conn, c
+# 画像のアップロード画面を表示
+@app.get('/upload_img')
+def update_img():
+    return template('views/upload_img.html')
+# 画像をアップロード
+@app.post('/upload_img')
+def do_update_img():
+    upload = request.files.get('upload_img', '')
+    if not upload.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
+        return 'File extension not allowed!'
+    save_path = get_save_path()
+    upload.save(save_path)
+    return 'Upload OK. FilePath: %s%s' % (save_path, upload.filename)
 
+def get_save_path():
+    path_dir = "./static/img/"
+    return path_dir
+
+# SQLクエリを実行する
 def ExecuteQuery(query):
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
@@ -94,6 +115,7 @@ def ExecuteQuery(query):
     conn.commit()
     cursor.close()
 
+# SELECT文を実行して、その内容を得る
 def ExecuteGetContents(get_contents_query):
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
@@ -101,6 +123,7 @@ def ExecuteGetContents(get_contents_query):
     result = cursor.fetchall()
     return result
 
+#SELECT文を実行して、その最初の内容を得る
 def ExecuteGetContent(get_content_query):
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()

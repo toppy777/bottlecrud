@@ -1,0 +1,12 @@
+{% extends 'base.html'%}
+
+{% block title %}
+    画像アップロード
+{% endblock %}
+
+{% block content %}
+    <form action="/upload_img" method="post" enctype="multipart/form-data">
+        <input type="file" name="upload_img"></br>
+        <input type="submit" value="アップロード"></br>
+    </form>
+{% endblock %}
