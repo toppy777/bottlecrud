@@ -3,8 +3,10 @@ from bottle import TEMPLATE_PATH, jinja2_template as template
 import sqlite3
 import datetime
 from const import DB_NAME
+import markdown
 
 app = Bottle()
+markdown = markdown.Markdown()
 
 # CSSとか
 @app.get("/static/<filename:path>")
@@ -32,10 +34,15 @@ def create():
 def do_create():
     title = request.POST.getunicode('title')
     content = request.POST.getunicode('content')
+    #content = markdown.convert(content)
     category_id = request.POST.getunicode('category')
 
-    ExecuteQuery('INSERT INTO blogs (title, content, created_at, category_id) VALUES( "%s", "%s", "%s", %s)' \
-                  % (title, content, str(datetime.datetime.now()), category_id))
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO blogs (title, content, created_at, category_id) VALUES(?, ?, ?, ?)", (title, content, str(datetime.datetime.now()), category_id))
+    conn.commit()
+    cursor.close()
+
     return template('views/top.html')
 
 # 記事一覧の閲覧
@@ -55,7 +62,10 @@ def show(id):
     if not blog:
         return 'このアイテムはみつかりませんでした。'
     else:
-        return template('views/show.html', blog = blog)
+        content = markdown.convert(blog[2])
+        print("コンバート後: ", content)
+        print("コンバート前: ", blog[2])
+        return template('views/show.html', blog = blog, content = content)
 
 @app.post('/deleteblog<id:re:[0-9]+>')
 def delete(id):
@@ -74,7 +84,14 @@ def update(id):
 def do_update(id):
     title = request.POST.getunicode('title')
     content = request.POST.getunicode('content')
-    ExecuteQuery('UPDATE blogs SET title = "%s", content = "%s" where id = %s' % (title, content, id))
+    #ExecuteQuery('UPDATE blogs SET title = "%s", content = "%s" where id = %s' % (title, content, id))
+
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute('UPDATE blogs SET title = ?, content = ? where id = ?', (title, content, id))
+    conn.commit()
+    cursor.close()
+
     blog = ExecuteGetContent('SELECT * FROM blogs WHERE id = %s' % id)
     return template('views/show.html', blog = blog)
 
@@ -138,4 +155,7 @@ run(app=app, host='localhost', port=8080, reloader=True, debug=True)
 # http://note.kurodigi.com/python-bottle-01/
 # https://www.takasay.com/entry/2015/07/04/010000
 # https://qiita.com/Gen6/items/f1636be0fe479f42b3ee
+# https://qiita.com/masakuni-ito/items/593b9d753c44da61937b
 
+# todo
+# ・削除あとの全記事閲覧ページでのカテゴリ表示がされてない
