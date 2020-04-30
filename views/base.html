@@ -1,20 +1,35 @@
 <!DOCTYPE html>
 <head>
     <!--フォントの読み込み-->
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <!--<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">-->
+    <link rel="stylesheet" type="text/css" href="/static/uikit.min.css">
     <link rel="stylesheet" type="text/css" href="/static/style.css">
     <title>CRUD System -{{ title }}-</title>
+    <nav class="uk-navbar-container uk-container" uk-navbar>
+        <div class="uk-navbar-left">
+            <ul class="uk-navbar-nav">
+                <li class="uk-active"><a href="/">とりぴき日誌</a></li>
+                <li class="uk-parent"><a href="/"></a></li>
+                <li><a href="/create">記事作成</a></li>
+                <li><a href="/showlist">記事一覧</a></li>
+                <li><a href="/show_categorylist">カテゴリ一覧</a></li>
+            </ul>
+        </div>
+    </nav>
 </head>
 <body>
-    <h1>
-        {% block title %}
-        {% endblock %}
-    </h1>
-
-    <div>
-        {% block content %}
-        {% endblock %}
-        <a href="/create">記事作成</a>
-        <a href="/showlist">記事閲覧</a>
+    <div  class="uk-container uk-container-center">
+        <div class="uk-grid page-title">
+            <h1>
+                {% block title %}
+                {% endblock %}
+            </h1>
+        </div>
+        <div>
+            {% block content %}
+            {% endblock %}
+            <a href=""></a>
+            <a href="/"></a>
+        </div>
     </div>
 </body>

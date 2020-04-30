@@ -106,6 +106,22 @@ def create_category():
     ExecuteQuery('INSERT INTO categories (category_name) values ("%s")' % category_name)
     return template('views/top.html')
 
+#カテゴリ一覧
+@app.get('/show_categorylist')
+def show_categorylist():
+    categories = ExecuteGetContents("SELECT * FROM categories")
+    return template('show_categorylist', categories=categories)
+
+# 指定されたカテゴリの記事一覧
+@app.get('/show_category<id:re:[0-9]+>')
+def show_category(id):
+    blogs = ExecuteGetContents('SELECT * FROM blogs WHERE category_id = %s' % id)
+    print(blogs)
+    if not blogs:
+        return 'このアイテムはみつかりませんでした。'
+    else:
+        return template('views/show_category.html', blogs = blogs)
+
 # 画像のアップロード画面を表示
 @app.get('/upload_img')
 def update_img():
@@ -159,3 +175,5 @@ run(app=app, host='localhost', port=8080, reloader=True, debug=True)
 
 # todo
 # ・削除あとの全記事閲覧ページでのカテゴリ表示がされてない
+# ・カテゴリ一覧
+# ・カテゴリ別一覧
