@@ -1,8 +1,45 @@
-.page-title {
-    padding-top: 13px;
+/*ナビゲーションバー*/
+.nav {
+    list-style: none;   /*リストの点消す*/
+    font-size: 0;       /*インラインブロックによる横並びでの隙間防止*/
+    width: 960px;
+    margin: 0 auto;
+    text-align: left;
 }
-.uk-navbar-container {
-    padding-right: 15px;
+.nav-back {             /* バブバーの背景を端まで */
+    /*background-color: #ff9e4a;*/
+    width: 100%;
+}
+.nav li {
+    padding: 9px;
+    width: 160px;
+    text-align: center;
+    display: inline-block;
+    font-size: 24px;    /*インラインブロックによる横並びでの隙間防止*/
+}
+.nav li a {
+    text-decoration: none; /*リンクの下線消す*/
+    color: #2c2d48;
+    display: block;
+}
+
+/* body */
+body {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    background-color: #f6ece3;
+}
+.body-wrap {
+    width: 960px;
+    margin: 0 auto;
+    text-align: left;
+    background-color: #eddfd1;
+    color: #2c2d48;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #d1bdaa;
+    border-radius: 10px;
 }
 /*
 オレンジ系#F38850
