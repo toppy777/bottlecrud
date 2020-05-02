@@ -46,12 +46,6 @@ def show(id):
         print("コンバート前: ", blog[2])
         return template('views/show.html', blog = blog, content = content)
 
-@app.post('/deleteblog<id:re:[0-9]+>')
-def delete(id):
-    ExecuteQuery('DELETE FROM blogs where id = %s' % id)
-    blogs = ExecuteGetContents('SELECT * FROM blogs')
-    return template('views/showlist.html', blogs = blogs)
-
 #カテゴリ一覧
 @app.get('/show_categorylist')
 def show_categorylist():
@@ -67,23 +61,6 @@ def show_category(id):
         return 'このアイテムはみつかりませんでした。'
     else:
         return template('views/show_category.html', blogs = blogs)
-
-# 画像のアップロード画面を表示
-@app.get('/upload_img')
-def update_img():
-    return template('views/upload_img.html')
-# 画像をアップロード
-@app.post('/upload_img')
-def do_update_img():
-    upload = request.files.get('upload_img', '')
-    if not upload.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
-        return 'File extension not allowed!'
-    save_path = get_save_path()
-    upload.save(save_path)
-    return 'Upload OK. FilePath: %s%s' % (save_path, upload.filename)
-def get_save_path():
-    path_dir = "./static/img/"
-    return path_dir
 
 # 記事一覧ページ
 @app.get('/admin/showlist')
@@ -203,6 +180,13 @@ def do_update(id):
     blog = ExecuteGetContent('SELECT * FROM blogs WHERE id = %s' % id)
     return template('admin/show.html', blog = blog, content=content)
 
+# 記事作成
+@app.post('/admin/deleteblog<id:re:[0-9]+>')
+def delete(id):
+    ExecuteQuery('DELETE FROM blogs where id = %s' % id)
+    blogs = ExecuteGetContents('SELECT * FROM blogs')
+    return template('admin/showlist.html', blogs = blogs)
+
 # 画像のアップロード画面を表示
 @app.get('/admin/upload_img')
 def update_img():
@@ -218,7 +202,7 @@ def do_update_img():
     return 'Upload OK. FilePath: %s%s' % (save_path, upload.filename)
 def get_save_path():
     dt_now = datetime.datetime.now()
-    path_dir = "./static/img/" + dt_now.year + "/" + dt_now.month + "/" + dt_now.day
+    path_dir = "./static/img/" + str(dt_now.year) + "/" + str(dt_now.month) + "/" + str(dt_now.day)
     os.makedirs(path_dir, exist_ok=True)
     return path_dir
 
