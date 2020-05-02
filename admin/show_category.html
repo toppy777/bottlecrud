@@ -1,4 +1,4 @@
-{% extends 'base.html'%}
+{% extends 'admin/base.html'%}
 
 {% block title %}
     指定されたカテゴリ記事一覧
@@ -6,6 +6,6 @@
 
 {% block content %}
     {% for blog in blogs %}
-        <a href="showblog{{ blog[0] }}">{{ blog[1] }}</a><br>
+        <a href="/admin/showblog{{ blog[0] }}">{{ blog[1] }}</a><br>
     {% endfor %}
 {% endblock %}

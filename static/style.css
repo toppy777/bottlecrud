@@ -18,7 +18,6 @@
     font-size: 24px;    /*インラインブロックによる横並びでの隙間防止*/
 }
 .nav li a {
-    text-decoration: none; /*リンクの下線消す*/
     color: #2c2d48;
     display: block;
 }
@@ -29,6 +28,7 @@ body {
     width: 100%;
     text-align: center;
     background-color: #f6ece3;
+    font-family: "Mplus 1p";
 }
 .body-wrap {
     width: 960px;
@@ -40,6 +40,16 @@ body {
     border-style: solid;
     border-color: #d1bdaa;
     border-radius: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+body a {
+    text-decoration: none; /*リンクの下線消す*/
+}
+h1 {
+    padding: 0.25em 0.5em;
+    background: transparent;
+    border-left: solid 8px #F38850;
 }
 /*
 オレンジ系#F38850

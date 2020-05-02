@@ -1,4 +1,4 @@
-{% extends 'base.html'%}
+{% extends 'admin/base.html'%}
 
 {% block title %}
     カテゴリ一覧
@@ -6,6 +6,6 @@
 
 {% block content %}
     {% for category in categories %}
-        <a href="show_category{{ category[0] }}">{{ category[1]}}</a><br>
+        <a href="/admin/show_category{{ category[0] }}">{{ category[1] }}</a><br>
     {% endfor %}
 {% endblock %}

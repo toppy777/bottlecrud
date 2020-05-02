@@ -1,0 +1,13 @@
+{% extends 'admin/base.html'%}
+
+{% block title %}
+    記事編集
+{% endblock %}
+
+{% block content %}
+    <form action="/updateblog{{ blog[0] }}" method="post">
+        <input name="title" type="text" value="{{ blog[1] }}"/><br>
+        <textarea name="content" rows="40" cols="100" wrap="hard" placeholder="本文">{{ blog[2] }}</textarea>
+        <input value="保存" type="submit" />
+    </form>
+{% endblock %}

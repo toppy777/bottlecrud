@@ -1,0 +1,12 @@
+{% extends 'admin/base.html'%}
+
+{% block title %}
+    カテゴリ作成
+{% endblock %}
+
+{% block content %}
+    <form action="/admin/create_category" method="post">
+        カテゴリ : <input name="category" type="text" placeholder="カテゴリ"/>
+        <input value="保存" type="submit" />
+    </form>
+{% endblock %}
