@@ -42,8 +42,6 @@ def show(id):
         return 'このアイテムはみつかりませんでした。'
     else:
         content = markdown.convert(blog[2])
-        print("コンバート後: ", content)
-        print("コンバート前: ", blog[2])
         return template('views/show.html', blog = blog, content = content)
 
 #カテゴリ一覧
@@ -80,8 +78,6 @@ def show(id):
         return 'このアイテムはみつかりませんでした。'
     else:
         content = markdown.convert(blog[2])
-        print("コンバート後: ", content)
-        print("コンバート前: ", blog[2])
         return template('admin/show.html', blog = blog, content = content)
 
 
