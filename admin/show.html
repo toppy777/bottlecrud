@@ -5,25 +5,11 @@
 {% endblock %}
 
 {% block content %}
-    <!--<table border='1'>
-        <tr>
-            <th>ID</th>
-            <th>タイトル</th>
-            <th>本文</th>
-            <th>作成日時</th>
-        </tr>
-            <tr>
-                <td>{{ blog[0] }}</td>
-                <td>{{ blog[1] }}</td>
-                <td>{{ content.replace('\n', '<br>') }}</td>
-                <td>{{ blog[3] }}</td>
-            </tr>
-    </table>-->
     {{ content.replace('\n', '<br>') }}
-    <form action="/deleteblog{{ blog[0] }}" method="post">
+    <form action="/admin/deleteblog{{ blog[0] }}" method="post">
         <button type="submit">削除</button>
     </form>
-    <form action="/updateblog{{ blog[0] }}" method="get">
+    <form action="/admin/updateblog{{ blog[0] }}" method="get">
         <button type="submit">編集</button>
     </form>
 {% endblock %}

@@ -4,6 +4,7 @@ import sqlite3
 import datetime
 from const import DB_NAME
 import markdown
+import os
 
 app = Bottle()
 markdown = markdown.Markdown()
@@ -50,29 +51,6 @@ def delete(id):
     ExecuteQuery('DELETE FROM blogs where id = %s' % id)
     blogs = ExecuteGetContents('SELECT * FROM blogs')
     return template('views/showlist.html', blogs = blogs)
-
-# 編集画面に遷移
-@app.get('/updateblog<id:re:[0-9]+>')
-def update(id):
-    blog = ExecuteGetContent('SELECT * FROM blogs WHERE id = %s' % id)
-    return template('views/update.html', blog = blog)
-
-# 編集を実行
-@app.post('/updateblog<id:re:[0-9]+>')
-def do_update(id):
-    title = request.POST.getunicode('title')
-    content = request.POST.getunicode('content')
-    #ExecuteQuery('UPDATE blogs SET title = "%s", content = "%s" where id = %s' % (title, content, id))
-
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
-    cursor.execute('UPDATE blogs SET title = ?, content = ? where id = ?', (title, content, id))
-    conn.commit()
-    cursor.close()
-
-    blog = ExecuteGetContent('SELECT * FROM blogs WHERE id = %s' % id)
-    return template('views/show.html', blog = blog)
-
 
 #カテゴリ一覧
 @app.get('/show_categorylist')
@@ -205,6 +183,44 @@ def show_category(id):
         return 'このアイテムはみつかりませんでした。'
     else:
         return template('admin/show_category.html', blogs = blogs)
+
+
+# 編集ページ
+@app.get('/admin/updateblog<id:re:[0-9]+>')
+def update(id):
+    blog = ExecuteGetContent('SELECT * FROM blogs WHERE id = %s' % id)
+    return template('admin/update.html', blog = blog)
+# 編集を実行
+@app.post('/admin/updateblog<id:re:[0-9]+>')
+def do_update(id):
+    title = request.POST.getunicode('title')
+    content = request.POST.getunicode('content')
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute('UPDATE blogs SET title = ?, content = ? where id = ?', (title, content, id))
+    conn.commit()
+    cursor.close()
+    blog = ExecuteGetContent('SELECT * FROM blogs WHERE id = %s' % id)
+    return template('admin/show.html', blog = blog, content=content)
+
+# 画像のアップロード画面を表示
+@app.get('/admin/upload_img')
+def update_img():
+    return template('admin/upload_img.html')
+# 画像をアップロード
+@app.post('/admin/upload_img')
+def do_update_img():
+    upload = request.files.get('upload_img', '')
+    if not upload.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
+        return 'File extension not allowed!'
+    save_path = get_save_path()
+    upload.save(save_path)
+    return 'Upload OK. FilePath: %s%s' % (save_path, upload.filename)
+def get_save_path():
+    dt_now = datetime.datetime.now()
+    path_dir = "./static/img/" + dt_now.year + "/" + dt_now.month + "/" + dt_now.day
+    os.makedirs(path_dir, exist_ok=True)
+    return path_dir
 
 
 run(app=app, host='localhost', port=8080, reloader=True, debug=True)
