@@ -54,11 +54,12 @@ def show_categorylist():
 @app.get('/show_category<id:re:[0-9]+>')
 def show_category(id):
     blogs = ExecuteGetContents('SELECT * FROM blogs WHERE category_id = %s' % id)
+    category = ExecuteGetContents('SELECT * FROM categories WHERE category_id = %s' % id)
     print(blogs)
     if not blogs:
         return 'このアイテムはみつかりませんでした。'
     else:
-        return template('views/show_category.html', blogs = blogs)
+        return template('views/show_category.html', blogs = blogs, category = category)
 
 # 記事一覧ページ
 @app.get('/admin/showlist')
@@ -201,7 +202,6 @@ def get_save_path():
     path_dir = "./static/img/" + str(dt_now.year) + "/" + str(dt_now.month) + "/" + str(dt_now.day)
     os.makedirs(path_dir, exist_ok=True)
     return path_dir
-
 
 run(app=app, host='localhost', port=8080, reloader=True, debug=True)
 

@@ -51,6 +51,12 @@ h1 {
     background: transparent;
     border-left: solid 8px #F38850;
 }
+
+/* image */
+img {
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px -5px rgba(0, 0, 0, 0.8);
+}
 /*
 オレンジ系#F38850
 白系#e1eef6

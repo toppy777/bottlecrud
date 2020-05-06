@@ -1,10 +1,9 @@
 {% extends 'base.html'%}
 
 {% block title %}
-    記事閲覧
+    {{ blog[1] }}
 {% endblock %}
 
 {% block content %}
     {{ content.replace('\n', '<br>') }}
-    
 {% endblock %}
